@@ -7,6 +7,7 @@ const zeroFill = require('zero-fill');
 const mkdirp = require('mkdirp');
 const moment = require('moment');
 const Gpio = require('pigpio').Gpio;
+const http = require('http');
 
 const readButton = (pin, label) => {
     const button = new Gpio(pin, { mode: Gpio.INPUT, pullUpDown: Gpio.PUD_UP, alert: true });
@@ -35,6 +36,8 @@ let sampleLength = 4000;
 let maxLength = delta / part * sampleLength;
 let first = true;
 let label = 'none';
+
+
 
 
 
@@ -86,5 +89,11 @@ function start (label) {
 
 };
 
+http.createServer(function (req, res) {
+    res.write(`Sound labeler on. Recorded ${counter} sounds`);
+    res.end();
+}).listen(process.env.PORT || 80, function(){
+    console.log("server start at port 80");
+});
 
 console.log('Started');
