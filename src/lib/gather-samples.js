@@ -7,8 +7,7 @@ const zeroFill = require('zero-fill');
 const Gpio = require('pigpio').Gpio;
 
 const readButton = (pin, label) => {
-
-const button = new Gpio(pin, { mode: Gpio.INPUT, pullUpDown: Gpio.PUD_UP, alert: true });
+    const button = new Gpio(pin, { mode: Gpio.INPUT, pullUpDown: Gpio.PUD_UP, alert: true });
     button.glitchFilter(10000);
     button.on('alert', (level) => {
         if (level === 0) {
@@ -17,9 +16,11 @@ const button = new Gpio(pin, { mode: Gpio.INPUT, pullUpDown: Gpio.PUD_UP, alert:
     });
 }
 
-readButton(4, 'test');
+const led = new Gpio(17, { mode: Gpio.OUTPUT });
+
+// readButton(, 'test');
 readButton(27, 'espresso');
-readButton(17, 'nespresso');
+readButton(4, 'nespresso');
 
 let recording = false;
 let recordTimeout = 0;
@@ -45,13 +46,15 @@ const micInstance = mic({
 function record (label) {
     if (!recording) {
         console.log('record', label);
+        led.digitalWrite(1);
         recording = true;
-        streamAudio();
-        micInstance.start();
+        //streamAudio();
+        //micInstance.start();
     } else {
+        led.digitalWrite(0);
         console.log('stop');
         recording = false;
-        micInstance.stop();
+        //micInstance.stop();
     }
 };
 
