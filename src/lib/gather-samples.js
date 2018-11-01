@@ -4,6 +4,8 @@ const PImage = require('pureimage');
 const wavSpectro = require('wav-spectrogram');
 const header = require("waveheader");
 const zeroFill = require('zero-fill');
+const mkdirp = require('mkdirp');
+const moment = require('moment');
 const Gpio = require('pigpio').Gpio;
 
 const readButton = (pin, label) => {
@@ -18,7 +20,6 @@ const readButton = (pin, label) => {
 
 const led = new Gpio(17, { mode: Gpio.OUTPUT });
 
-// readButton(, 'test');
 readButton(27, 'espresso');
 readButton(4, 'nespresso');
 
@@ -32,68 +33,56 @@ let delta = 1000;
 let part = 1/8 * 1000;
 let sampleLength = 4000;
 let maxLength = delta / part * sampleLength;
-let buffer = Buffer.from([]);
 let first = true;
 let label = 'none';
 
 
-const micInstance = mic({
-    rate: '16000',
-    channels: '1',
-});
 
+let micInstance;
 
 function record (label) {
     if (!recording) {
         console.log('record', label);
         led.digitalWrite(1);
         recording = true;
-        //streamAudio();
-        //micInstance.start();
+        micInstance = start(label);
     } else {
         led.digitalWrite(0);
         console.log('stop');
         recording = false;
-        //micInstance.stop();
+        micInstance.stop();
+        micInstance = null;
     }
 };
 
-function streamAudio () {
+function start (label) {
 
+    let buffer = Buffer.from([]);
+
+    const micInstance = mic({ rate: '16000', channels: '1', });
     const micInputStream = micInstance.getAudioStream();
 
-    micInputStream.on('data', function(data) {
+    const now = moment();
+    const folder = `/data/${label}/${now.format('YYYY')}/${now.format('MM')}/${now.format('DD')}}`;
+    const filename = `${folder}/${now.format('HH_MM_ss')}-sound-${label}.wav`;
 
-        if (!first) {
+    mkdirp.sync(folder);
+    const outputFileStream = fs.WriteStream(filename);
 
-            buffer = Buffer.concat([buffer, data]);
+    micInputStream.pipe(outputFileStream);
 
-
-            if (buffer.length >= maxLength) {
-
-                let h = header(buffer.length, { sampleRate: 16000, channels: 1 });
-
-                const wavBuffer = Buffer.concat([h, buffer]);
-
-                let filename = `/data/sound-${zeroFill(4, counter)}.wav`;
-
-                fs.writeFile(filename, wavBuffer, 'binary', (err) => {
-                    console.log(`Save wav ${filename} with ${wavBuffer.length} bytes`);
-                    if (err) {
-                        console.log('error', err);
-                    }
-                });
-
-                buffer = Buffer.from([]);
-                counter++;
-
-            }
-
-        }
-
-        first = false;
-
+    micInputStream.on('stopComplete', function() {
+        console.log(`Save wav ${filename} with ${buffer.length} bytes`);
+        counter++;
     });
+
+    micInputStream.on('data', function(data) {
+        buffer = Buffer.concat([buffer, data]);
+    });
+
+    micInstance.start();
+
+    return micInstance;
 
 };
 

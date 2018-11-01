@@ -14,7 +14,9 @@
     "waveheader": "0.0.2",
     "zero-fill": "2.2.3",
     "onoff": "3.2.2",
-    "pigpio": "1.1.4"
+    "pigpio": "1.1.4",
+    "mkdirp": "0.5.1",
+    "moment": "2.22.2"
   },
   "author": "",
   "license": "ISC"
