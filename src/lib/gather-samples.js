@@ -63,7 +63,7 @@ function start (label) {
     const micInputStream = micInstance.getAudioStream();
 
     const now = moment();
-    const folder = `/data/${label}/${now.format('YYYY')}/${now.format('MM')}/${now.format('DD')}}`;
+    const folder = `/data/${label}/${now.format('YYYY')}/${now.format('MM')}/${now.format('DD')}`;
     const filename = `${folder}/${now.format('HH_MM_ss')}-sound-${label}.wav`;
 
     mkdirp.sync(folder);
