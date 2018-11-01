@@ -1,0 +1,21 @@
+{
+  "name": "espresso-distinctor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "mic": "2.1.2",
+    "wav": "1.0.2",
+    "pureimage": "0.1.6",
+    "wav-spectrogram": "0.0.4",
+    "waveheader": "0.0.2",
+    "zero-fill": "2.2.3",
+    "onoff": "3.2.2",
+    "pigpio": "1.1.4"
+  },
+  "author": "",
+  "license": "ISC"
+}
