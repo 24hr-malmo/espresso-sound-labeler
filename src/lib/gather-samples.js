@@ -19,10 +19,10 @@ const readButton = (pin, label) => {
     });
 }
 
-const led = new Gpio(17, { mode: Gpio.OUTPUT });
+const led = new Gpio(4, { mode: Gpio.OUTPUT });
 
-readButton(27, 'espresso');
-readButton(4, 'nespresso');
+readButton(17, 'espresso');
+readButton(27, 'nespresso');
 
 let recording = false;
 let recordTimeout = 0;
