@@ -36,19 +36,27 @@ let sampleLength = 4000;
 let maxLength = delta / part * sampleLength;
 let first = true;
 let label = 'none';
-
-
+let timeout = -1;
+let maxTime = 60 * 1000;
 
 
 
 let micInstance;
 
 function record (label) {
+    clearTimeout(timeout);
     if (!recording) {
         console.log('record', label);
         led.digitalWrite(1);
         recording = true;
         micInstance = start(label);
+        timeout = setTimeout(() => {
+            console.log('auto stop');
+            led.digitalWrite(0);
+            recording = false;
+            micInstance.stop();
+            micInstance = null;
+        }, maxTime);
     } else {
         led.digitalWrite(0);
         console.log('stop');
