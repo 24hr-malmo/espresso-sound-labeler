@@ -1,0 +1,19 @@
+FROM node:10.12.0-slim
+
+ARG VERSION=0-DEV
+ENV VERSION=${VERSION}
+
+RUN mkdir -p /app/node_modules
+
+RUN apt-get update && apt-get install -y build-essential vim unzip 
+
+WORKDIR /app
+
+RUN npm i nodemon -g
+
+COPY package-def.json /app/package.json
+RUN npm i
+
+WORKDIR /app/src
+
+CMD ["nodemon", "index.js"]

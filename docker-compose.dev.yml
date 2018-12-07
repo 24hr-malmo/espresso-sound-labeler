@@ -2,7 +2,9 @@ version: '2.1'
 services:
 
     service:
-        build: ./
+        build:
+            context: ./
+            dockerfile: Dockerfile.dev
         privileged: true
         ports:
             - "80:80"

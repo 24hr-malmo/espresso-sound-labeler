@@ -1,0 +1,36 @@
+html {
+    font-family: Poppins;
+    padding: 2rem;
+}
+
+h1 {
+    font-size: 4rem;
+}
+
+.main {
+    display: none;
+}
+
+.main--loaded {
+    display: block;
+}
+
+.loading--loaded {
+    display: none;
+}
+
+
+.log-item {
+    display: flex;
+}
+
+.log-item--date {
+    width: 80px;
+    padding-right: 1rem;
+}
+
+.log-item--prediction {
+    font-weight: bold;
+}
+
+

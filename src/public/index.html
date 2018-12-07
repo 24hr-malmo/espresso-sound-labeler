@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <script src="/socket.io/socket.io.js"></script>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:400,700" />
+        <link rel="stylesheet" href="/css/style.css" />
+    </head>
+    <body>
+    
+        <h1>Espresso Distinctor</h1>
+        <div class="loading">Loading</div>
+        <div class="main">
+            <h2>Labeler status: <span data-id="labeler-status"/></h2>
+            <h2>Gatherer status: <span data-id="gatherer-status"/></h2>
+            <button data-id="toggle-button">Toggle state</button>
+
+            <hr/>
+
+            <div data-id="predictions"></div>
+        </div>
+
+        <script src="/scripts/main.js"></script>
+
+    </body>
+</html>
+

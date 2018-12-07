@@ -6,8 +6,37 @@ const header = require("waveheader");
 const zeroFill = require('zero-fill');
 const mkdirp = require('mkdirp');
 const moment = require('moment');
-const Gpio = require('pigpio').Gpio;
-const http = require('http');
+const os = require('os');
+const readline = require('readline');
+
+let Gpio;
+
+if (os.type() !== 'Darwin') {
+    Gpio = require('pigpio').Gpio;
+} else {
+    readline.emitKeypressEvents(process.stdin);
+    let keyMap = {
+        17: 'q',
+        27: 'w',
+    };
+    process.stdin.on('keypress', (str, key) => {
+        if (key.name === 'q' || key.name === 'w') {
+            Gpio.listeners.forEach(item => {
+                if (keyMap[item.pin] === key.name) {
+                    item.callback(0);
+                }
+            });
+        }
+    });
+    Gpio = function (pin, options) {
+        Gpio.listeners = Gpio.listeners || [];
+        this.on = (name, callback) => {
+            Gpio.listeners.push({pin, name, callback});
+        };
+        this.digitalWrite = () => {};
+        this.glitchFilter = () => {};
+    };
+}
 
 const readButton = (pin, label) => {
     const button = new Gpio(pin, { mode: Gpio.INPUT, pullUpDown: Gpio.PUD_UP, alert: true });
@@ -38,13 +67,18 @@ let first = true;
 let label = 'none';
 let timeout = -1;
 let maxTime = 60 * 1000;
-
-
+let on = false;
 
 let micInstance;
 
 function record (label) {
+
     clearTimeout(timeout);
+
+    if (!on) {
+        return
+    };
+
     if (!recording) {
         console.log('record', label);
         led.digitalWrite(1);
@@ -97,6 +131,7 @@ function start (label) {
 
 };
 
+/*
 http.createServer(function (req, res) {
     res.write(`Sound labeler on. Recorded ${counter} sounds`);
     res.end();
@@ -104,4 +139,17 @@ http.createServer(function (req, res) {
     console.log("server start at port 80");
 });
 
-console.log('Started');
+*/
+
+exports.setState = (state) => {
+    on = state;
+}
+
+exports.getState = () => {
+    return on;
+}
+
+
+exports.getCount = () => {
+    return counter;
+};
