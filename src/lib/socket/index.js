@@ -11,8 +11,13 @@ const init = (server) => {
 
     const sendStatus = () => {
         io.emit('states.update', {
-            gatherer: gatherer.getState(),
-            labeler: labeler.getState(),
+            gatherer: {
+                state: gatherer.getState(),
+                count: gatherer.getCount(),
+            },
+            labeler: {
+                state: labeler.getState(),
+            }
         });
     }
 
