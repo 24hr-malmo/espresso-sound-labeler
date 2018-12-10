@@ -7,6 +7,7 @@ const zeroFill = require('zero-fill');
 const bufferToSpectogram = require('buffer-to-spectogram');
 const predictor = require('./predictor');
 const socket = require('../socket');
+const fetch = require('node-fetch');
 
 let on = false;
 let micInstance;
@@ -19,6 +20,8 @@ let sampleLength = 4000;
 let maxLength = delta / part * sampleLength;
 
 console.log(maxLength);
+
+const PREDICTOR_SERVICE = process.env.PREDICTOR_SERVICE || 'http://localhost:9876/predict';
 
 const start = () => {
 
@@ -59,10 +62,19 @@ const start = () => {
                 let flatImage = PImage.make(1, height);
 
                 const imageData = await bufferToSpectogram(wavBuffer, '/Users/camilo/Projects/espresso-sound-labeler/temp.png', {returnAsBuffer: true, isWav: true});
+                const base64 = imageData[0].toString('base64');
+
+                const predictionResponse = await fetch(PREDICTOR_SERVICE, {
+                    headers: { 'Content-Type': 'application/json' },
+                    method: 'post',
+                    body: JSON.stringify({spectogram: base64}),
+                });
+                const prediction = await predictionResponse.json();
+
                 // console.log('test',  imageData[0].length, imageData[0].length / 4);
 
-                const prediction = await predictor(imageData[0]);
-                prediction.date = (new Date()).getTime();
+                //const prediction = await predictor(imageData[0]);
+                //prediction.date = (new Date()).getTime();
                 socket.emit('prediction.update', prediction);
                 // console.log(prediction.humanReadableLabel);
 

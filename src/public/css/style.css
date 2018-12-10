@@ -33,4 +33,11 @@ h1 {
     font-weight: bold;
 }
 
+.status-row {
+    font-size: 2rem;
+    display: flex;
+}
 
+.status-row div {
+    padding-right: 1rem;
+}

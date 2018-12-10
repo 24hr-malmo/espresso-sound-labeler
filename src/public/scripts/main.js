@@ -21,7 +21,7 @@
     function updateStates(data) {
         document.querySelector('[data-id="labeler-status"]').innerHTML = data.labeler.state;
         document.querySelector('[data-id="gatherer-status"]').innerHTML = data.gatherer.state;
-        document.querySelector('[data-id="gatherer-count"]').innerHTML = data.gatherer.count;
+        document.querySelector('[data-id="gatherer-count"]').innerHTML = '(' + data.gatherer.count + ')';
     }
 
     function showPredictions(payload) {

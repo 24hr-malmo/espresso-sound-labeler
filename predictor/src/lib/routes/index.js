@@ -1,5 +1,5 @@
 const router = require('koa-router')();
 
-// router.get('/', require('./control'));
+router.post('/predict', require('./predict'));
 
 module.exports = router;

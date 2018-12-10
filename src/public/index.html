@@ -10,12 +10,17 @@
         <h1>Espresso Distinctor</h1>
         <div class="loading">Loading</div>
         <div class="main">
-            <h2>Labeler status: <span data-id="labeler-status"/></h2>
-            <h2>Gatherer status: <span data-id="gatherer-status"/> <span data-id="gatherer-count"/></h2>
+            <div class="status-row">
+                <div>Labeler status:</div>
+                <div data-id="labeler-status"></div>
+            </div>
+            <div class="status-row">
+                <div>Gatherer status:</div>
+                <div data-id="gatherer-status"></div>
+                <div data-id="gatherer-count"></div>
+            </div>
             <button data-id="toggle-button">Toggle state</button>
-
             <hr/>
-
             <div data-id="predictions"></div>
         </div>
 
