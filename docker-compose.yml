@@ -17,4 +17,6 @@ services:
             - LOG_LEVEL=verbose
             - NODE_ENV=developer
             - GATHER_SAMPLES=false
+            # - PREDICTOR_SERVICE=http://172.16.135.171:9876/predict
+            - PREDICTOR_SERVICE=http://172.16.135.230:9779/predict
 

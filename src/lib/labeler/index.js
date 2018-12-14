@@ -5,7 +5,7 @@ const wavSpectro = require('wav-spectrogram');
 const header = require("waveheader");
 const zeroFill = require('zero-fill');
 const bufferToSpectogram = require('buffer-to-spectogram');
-const predictor = require('./predictor');
+// const predictor = require('./predictor');
 const socket = require('../socket');
 const fetch = require('node-fetch');
 
@@ -59,7 +59,8 @@ const start = () => {
                 const wavBuffer = Buffer.concat([h, deltaBuffer]);
 
                 const height = 255;
-                let flatImage = PImage.make(1, height);
+                const width = 19;
+                let flatImage = PImage.make(width * height, 1);
 
                 const imageData = await bufferToSpectogram(wavBuffer, '/Users/camilo/Projects/espresso-sound-labeler/temp.png', {returnAsBuffer: true, isWav: true});
                 const base64 = imageData[0].toString('base64');
@@ -67,9 +68,11 @@ const start = () => {
                 const predictionResponse = await fetch(PREDICTOR_SERVICE, {
                     headers: { 'Content-Type': 'application/json' },
                     method: 'post',
-                    body: JSON.stringify({spectogram: base64}),
+                    body: JSON.stringify({spectogram: base64, wav: wavBuffer.toString('base64')}),
                 });
                 const prediction = await predictionResponse.json();
+
+                console.log(prediction);
 
                 // console.log('test',  imageData[0].length, imageData[0].length / 4);
 
