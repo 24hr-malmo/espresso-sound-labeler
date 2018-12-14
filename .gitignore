@@ -1,6 +1,9 @@
- .DS_Store
+.DS_Store
 node_modules
 data
 *.swp
 *.swo
 *.swn
+
+*.wav
+*.png

@@ -11,6 +11,8 @@ const IMAGE_H = 255;
 const IMAGE_W = 19;
 const IMAGE_SIZE = IMAGE_H * IMAGE_W;
 
+let counter = 0;
+
 let model;
 const labels = {
     0: 'nothing',
@@ -59,6 +61,9 @@ const publicPredictor = async (buffer) => {
     await getModel();
     const datasetBytesBuffer = new ArrayBuffer(buffer.length);
     const datasetBytesView = new Float32Array( datasetBytesBuffer);
+    for ( let i = 0, ii = buffer.length / 4; i < ii; i++ ) { 
+        datasetBytesView[i] = buffer[i * 4] / 255;
+    }
     const tensor = tf.tensor(datasetBytesView, [1, 255, 19, 1]);
     const label = await predict(tensor);
     const humanReadableLabel = labels[label];
@@ -68,7 +73,7 @@ const publicPredictor = async (buffer) => {
     };
 }
 
-const test = async () => {
+const test = async (allFilesPath) => {
 
     try {
 
@@ -76,7 +81,7 @@ const test = async () => {
 
         let predictedCorrect = 0;
 
-        let allFiles = await getFiles(path.join(__dirname, '../data'));
+        let allFiles = await getFiles(allFilesPath);
         let files = allFiles.filter(file => file.includes('.png'));
 
         for ( let j = 0, jj = files.length; j < jj; j++ ) { 
@@ -126,3 +131,4 @@ const obs = new PerformanceObserver((items) => {
 obs.observe({ entryTypes: ['measure'] });
 
 module.exports = publicPredictor;
+module.exports.test = test;
