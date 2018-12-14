@@ -29,7 +29,7 @@
         predictions.innerHTML = predictionLog
             .map(item => {
                 
-                const color = '#aaa';
+                let color = '#aaa';
                 switch (item.label) {
                     case 1:
                         color = '#795548';
@@ -46,11 +46,16 @@
                 `;
             })
             .join('');
-        predictionLog = predictionLog.slice(0, 10);
+        predictionLog = predictionLog.slice(0, 100);
+    }
+
+    function updateCounter(data) {
+        document.querySelector('[data-id="gatherer-count"]').innerHTML = '(' + data.counter + ')';
     }
 
     socket.on('states.update', updateStates);
     socket.on('prediction.update', showPredictions);
+    socket.on('gatherer.counter.update', updateCounter);
 
     socket.on('event', function(data){});
     socket.on('disconnect', function(){});

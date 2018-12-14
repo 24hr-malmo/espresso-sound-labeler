@@ -8,6 +8,7 @@ const mkdirp = require('mkdirp');
 const moment = require('moment');
 const os = require('os');
 const readline = require('readline');
+const socket = require('../socket');
 
 let Gpio;
 
@@ -66,7 +67,7 @@ let maxLength = delta / part * sampleLength;
 let first = true;
 let label = 'none';
 let timeout = -1;
-let maxTime = 60 * 1000;
+let maxTime = 30 * 60 * 1000;
 let on = false;
 
 let micInstance;
@@ -119,6 +120,7 @@ function start (label) {
     micInputStream.on('stopComplete', function() {
         console.log(`Save wav ${filename} with ${buffer.length} bytes`);
         counter++;
+        socket.emit('gatherer.counter.update', {counter});
     });
 
     micInputStream.on('data', function(data) {
